@@ -7,7 +7,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "FPS_CharacterBase.generated.h"
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovedDelegate);
 UCLASS()
 class ZOMBIEMULTI_API AFPS_CharacterBase : public ACharacter
 {
@@ -43,7 +43,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	FOnMovedDelegate OnMoved;
+	FOnMovedDelegate OnStopedMoving;
 	void BroadCastMovement();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetModels();
 private:
 	float PreviousSpeed;
 };

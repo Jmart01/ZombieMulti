@@ -38,8 +38,13 @@ void AFPS_CharacterBase::BroadCastMovement()
 		float CurrentSpeed = GetCharacterMovement()->GetLastUpdateVelocity().Size();
 		if(PreviousSpeed == 0 && CurrentSpeed !=0)
 		{
-			
+			OnMoved.Broadcast();
 		}
+		if(PreviousSpeed != 0 && CurrentSpeed == 0)
+		{
+			OnStopedMoving.Broadcast();
+		}
+		PreviousSpeed = CurrentSpeed;
 	}
 }
 
