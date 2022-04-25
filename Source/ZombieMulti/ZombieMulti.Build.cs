@@ -8,6 +8,7 @@ public class ZombieMulti : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay","GameplayAbilities","GameplayTags","GameplayTasks", "NetCore", "Networking"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay","NetCore", "Networking"});
+		PrivateDependencyModuleNames.AddRange(new string[]{"GameplayAbilities","GameplayTags","GameplayTasks"});
 	}
 }

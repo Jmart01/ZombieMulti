@@ -3,6 +3,9 @@
 
 #include "FPS_CharacterBase.h"
 
+#include "AbilitySystemComponent.h"
+#include "AttributeSetBase.h"
+#include "GameplayAbilityBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 
@@ -15,6 +18,13 @@ AFPS_CharacterBase::AFPS_CharacterBase()
 	PlayerEye->SetupAttachment(GetRootComponent());
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	Attributes = CreateDefaultSubobject<UAttributeSetBase>("Attributes");
+
 	
 }
 
@@ -29,6 +39,53 @@ void AFPS_CharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+UAbilitySystemComponent* AFPS_CharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+void AFPS_CharacterBase::InitializeAttributes()
+{
+	if(AbilitySystemComponent && DefaultAttributeEffect)
+	{
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(DefaultAttributeEffect, 1, EffectContext);
+		if(SpecHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle GEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
+}
+
+void AFPS_CharacterBase::GiveAbilities()
+{
+	if(HasAuthority() && AbilitySystemComponent)
+	{
+		for(TSubclassOf<UGameplayAbilityBase>& StartupAbility : DefaultAbilities)
+		{
+			AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec(StartupAbility,1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID),this));
+		}
+	}
+}
+
+void AFPS_CharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	InitializeAttributes();
+	GiveAbilities();
+}
+
+void AFPS_CharacterBase::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+	InitializeAttributes();
 }
 
 void AFPS_CharacterBase::BroadCastMovement()

@@ -20,11 +20,29 @@ class ZOMBIEMULTI_API UAttributeSetBase : public UAttributeSet
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION()
-	virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
+	UAttributeSetBase();
 	
-	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const;
+	
+	
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UAttributeSetBase, Health);
+
+	UFUNCTION()
+	virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
+
+	UPROPERTY(BlueprintReadOnly, Category = "WeaponAmmo", ReplicatedUsing = OnRep_WeaponAmmo)
+	FGameplayAttributeData WeaponAmmo;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, WeaponAmmo);
+
+	UFUNCTION()
+	virtual void OnRep_WeaponAmmo(const FGameplayAttributeData& OldWeaponAmmo);
+
+	UPROPERTY(BlueprintReadOnly, Category="Current Weapon", ReplicatedUsing= ONRep_CurrentWeapon)
+	FGameplayAttributeData CurrentWeapon;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, CurrentWeapon);
+
+	UFUNCTION()
+	virtual void OnRep_CurrentWeapon(const FGameplayAttributeData& OldWeapon);
 };

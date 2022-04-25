@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "AbilitySystemInterface.h"
+#include <GameplayEffectTypes.h>
 #include "FPS_CharacterBase.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovedDelegate);
 UCLASS()
-class ZOMBIEMULTI_API AFPS_CharacterBase : public ACharacter
+class ZOMBIEMULTI_API AFPS_CharacterBase: public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -26,6 +27,13 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCameraComponent* PlayerEye;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= Camera, meta = (AllowPrivateAccess = "true"))
+	class UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY()
+	class UAttributeSetBase* Attributes;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAnimInstance* AnimInstance;
 
@@ -45,6 +53,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	FOnMovedDelegate OnMoved;
 	FOnMovedDelegate OnStopedMoving;
+
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual void InitializeAttributes();
+	virtual void GiveAbilities();
+
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category= "Gameplay Ability System")
+	TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category=" Gameplay Ability System")
+	TArray<TSubclassOf<class UGameplayAbilityBase>> DefaultAbilities;
+
+	//UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay Ability System")
+	//TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+	
+	
 	void BroadCastMovement();
 
 	UFUNCTION(BlueprintImplementableEvent)

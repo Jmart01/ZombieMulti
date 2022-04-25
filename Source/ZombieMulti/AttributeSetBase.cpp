@@ -5,13 +5,32 @@
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemComponent.h"
 
-void UAttributeSetBase::OnRep_Health(const FGameplayAttributeData& OldHealth)
+UAttributeSetBase::UAttributeSetBase()
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAttributeSetBase, Health, OldHealth);
+	
 }
 
 void UAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAttributeSetBase, Health, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAttributeSetBase, WeaponAmmo, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAttributeSetBase, CurrentWeapon, COND_None, REPNOTIFY_Always);
 }
+
+void UAttributeSetBase::OnRep_Health(const FGameplayAttributeData& OldHealth)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAttributeSetBase, Health, OldHealth);
+}
+
+void UAttributeSetBase::OnRep_WeaponAmmo(const FGameplayAttributeData& OldWeaponAmmo)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAttributeSetBase, WeaponAmmo, OldWeaponAmmo);
+}
+
+void UAttributeSetBase::OnRep_CurrentWeapon(const FGameplayAttributeData& OldWeapon)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAttributeSetBase, CurrentWeapon, OldWeapon);
+}
+
+
