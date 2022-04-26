@@ -7,6 +7,10 @@
 #include "AttributeSetBase.h"
 #include "GameplayAbilityBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "AbilitySystemComp.h"
+#include "AttributeSetBase.h"
+#include "GameplayAbilityBase.h"
+#include <GameplayEffectTypes.h>
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
@@ -86,6 +90,14 @@ void AFPS_CharacterBase::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	InitializeAttributes();
+
+	if(AbilitySystemComponent && InputComponent)
+	{
+		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel","EAbilityInputID",
+			static_cast<int32>(EAbilityInputID::Confirm),
+			static_cast<int32>(EAbilityInputID::Cancel));
+		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent,Binds);
+	}
 }
 
 void AFPS_CharacterBase::BroadCastMovement()
@@ -114,6 +126,14 @@ void AFPS_CharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPS_CharacterBase::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AFPS_CharacterBase::Turn);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPS_CharacterBase::LookUp);
+
+	if(AbilitySystemComponent && InputComponent)
+	{
+		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel","EAbilityInputID",
+			static_cast<int32>(EAbilityInputID::Confirm),
+			static_cast<int32>(EAbilityInputID::Cancel));
+		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent,Binds);
+	}
 }
 
 void AFPS_CharacterBase::MoveForward(float amount)

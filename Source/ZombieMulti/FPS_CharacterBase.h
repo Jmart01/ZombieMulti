@@ -68,8 +68,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category=" Gameplay Ability System")
 	TArray<TSubclassOf<class UGameplayAbilityBase>> DefaultAbilities;
 
-	//UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay Ability System")
-	//TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+	
 	
 	
 	void BroadCastMovement();
