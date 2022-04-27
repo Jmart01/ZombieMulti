@@ -25,7 +25,7 @@ protected:
 	//void SpawnInGameUI();
 //************************************Components*****************************
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Camera)
 	UCameraComponent* PlayerEye;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= Camera, meta = (AllowPrivateAccess = "true"))
@@ -34,11 +34,17 @@ protected:
 	UPROPERTY()
 	class UAttributeSetBase* Attributes;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
 	UAnimInstance* AnimInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USkeletalMesh* SkeletalMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Mesh)
+	class USkeletalMesh* SkeletalMesh;
+
+	UPROPERTY(EditAnywhere,Category=Mesh)
+	class USkeletalMesh* GunMesh;
+
+	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
+	class USceneComponent* MuzzleLocation;
 
 	//*********************inputs************************
 	// Called to bind functionality to input

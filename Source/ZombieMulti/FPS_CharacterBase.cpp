@@ -2,14 +2,13 @@
 
 
 #include "FPS_CharacterBase.h"
-
+#include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSetBase.h"
 #include "GameplayAbilityBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystemComp.h"
-#include "AttributeSetBase.h"
-#include "GameplayAbilityBase.h"
 #include <GameplayEffectTypes.h>
 #include "Net/UnrealNetwork.h"
 
@@ -19,7 +18,8 @@ AFPS_CharacterBase::AFPS_CharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PlayerEye = CreateDefaultSubobject<UCameraComponent>("PlayerEye");
-	PlayerEye->SetupAttachment(GetRootComponent());
+	PlayerEye->SetupAttachment(GetCapsuleComponent());
+	PlayerEye->AddRelativeLocation(FVector(-39.65f,1.75f,64.0f));
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
