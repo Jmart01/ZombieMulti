@@ -37,11 +37,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
 	UAnimInstance* AnimInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Mesh)
-	class USkeletalMesh* SkeletalMesh;
-
-	UPROPERTY(EditAnywhere,Category=Mesh)
-	class USkeletalMesh* GunMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	class USceneComponent* MuzzleLocation;
@@ -74,7 +69,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category=" Gameplay Ability System")
 	TArray<TSubclassOf<class UGameplayAbilityBase>> DefaultAbilities;
 
-	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Ammo")
+	int AmmoinClip;
 	
 	
 	void BroadCastMovement();

@@ -19,16 +19,16 @@ AFPS_CharacterBase::AFPS_CharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 	PlayerEye = CreateDefaultSubobject<UCameraComponent>("PlayerEye");
 	PlayerEye->SetupAttachment(GetCapsuleComponent());
-	PlayerEye->AddRelativeLocation(FVector(-39.65f,1.75f,64.0f));
-	bUseControllerRotationYaw = false;
-	GetCharacterMovement()->bOrientRotationToMovement = true;
+	//PlayerEye->AddRelativeLocation(FVector(-39.65f,1.75f,64.0f));
+	PlayerEye->bUsePawnControlRotation = true;
+	bUseControllerRotationYaw = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	Attributes = CreateDefaultSubobject<UAttributeSetBase>("Attributes");
-
 	
 }
 
@@ -150,10 +150,15 @@ void AFPS_CharacterBase::MoveForward(float amount)
 
 void AFPS_CharacterBase::MoveRight(float amount)
 {
-	if(amount != 0)
+	if(amount > 0)
 	{
 		FVector RightDir = PlayerEye->GetRightVector();
 		AddMovementInput(RightDir);
+	}
+	else if(amount < 0)
+	{
+		FVector LeftDir = PlayerEye->GetRightVector();
+		AddMovementInput(-LeftDir);
 	}
 }
 
